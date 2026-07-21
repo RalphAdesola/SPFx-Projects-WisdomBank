@@ -1,0 +1,41 @@
+.topicCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: grid;
+  gap: 16px;
+  transition: transform 0.2s ease;
+}
+
+.topicCard:hover {
+  transform: translateY(-2px);
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.courseLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4f46e5;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #111827;
+}
+
+.details {
+  display: flex;
+  gap: 16px;
+  color: #6b7280;
+  font-size: 13px;
+}

@@ -1,0 +1,27 @@
+.emptyState {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.ilustration {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #eef2ff 0%, #fff7ed 100%);
+}
+
+h2 {
+  margin-bottom: 12px;
+  font-size: 20px;
+  color: #111827;
+}
+
+p {
+  margin: 0;
+  color: #6b7280;
+}

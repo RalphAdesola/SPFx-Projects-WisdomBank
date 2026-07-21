@@ -1,0 +1,14 @@
+.inputBar {
+  display: grid;
+  grid-template-columns: 1fr 56px;
+  gap: 12px;
+  align-items: end;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.ms-TextField-fieldGroup {
+  border: none;
+}

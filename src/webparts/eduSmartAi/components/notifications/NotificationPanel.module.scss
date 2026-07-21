@@ -1,0 +1,24 @@
+.panel {
+  display: grid;
+  gap: 24px;
+}
+
+.headerRow {
+  display: grid;
+  gap: 16px;
+}
+
+.list {
+  display: grid;
+  gap: 16px;
+}
+
+.loading,
+.empty {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  color: #6b7280;
+}

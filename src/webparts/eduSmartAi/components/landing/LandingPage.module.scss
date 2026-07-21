@@ -1,0 +1,244 @@
+.hero {
+  min-height: calc(100vh - 48px);
+  padding: 56px;
+  border-radius: 32px;
+  box-shadow: 0 38px 110px rgba(0, 0, 0, 0.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #ffffff;
+}
+
+.heroDark,
+.heroLight {
+  background-blend-mode: multiply;
+}
+
+.heroDark {
+  background-color: #050505;
+}
+
+.heroLight {
+  background-color: rgba(0, 0, 0, 0.24);
+}
+
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero::before {
+  background: linear-gradient(160deg, rgba(14, 28, 56, 0.36), rgba(18, 27, 39, 0.17));
+}
+
+.hero::after {
+  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.14), transparent 34%),
+              radial-gradient(circle at 80% 15%, rgba(96, 165, 250, 0.16), transparent 27%),
+              radial-gradient(circle at 60% 80%, rgba(255, 255, 255, 0.08), transparent 30%);
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(5, 10, 18, 0.14), rgba(8, 12, 21, 0.28));
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, 100%);
+  display: grid;
+  gap: 28px;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.brandGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.heroHeader {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+}
+
+.topBar {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.brandTag {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f7ff 100%);
+  color: #3730a3;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.16);
+}
+
+.brandLabel {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.48);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  line-height: 0.95;
+  color: inherit;
+  max-width: 680px;
+}
+
+p {
+  margin: 0;
+  font-size: 1.05rem;
+  color: inherit;
+  opacity: 0.82;
+  max-width: 660px;
+  line-height: 1.75;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.ctaButton {
+  border-radius: 999px;
+  padding: 18px 38px;
+  min-width: 200px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.96), rgba(79, 70, 229, 0.96));
+  box-shadow: 0 24px 40px rgba(14, 165, 233, 0.28);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  animation: floatButton 7s ease-in-out infinite;
+}
+
+.ctaButton:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 28px 48px rgba(14, 165, 233, 0.32);
+}
+
+.ctaButton::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.45), transparent 42%);
+  filter: blur(18px);
+  animation: spinGlow 12s linear infinite;
+}
+
+.secondaryText {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.95rem;
+}
+
+.secondaryText {
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.featureGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 26px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(18px);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.featureCard strong {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: inherit;
+}
+
+.featureCard span {
+  color: inherit;
+  opacity: 0.78;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@keyframes floatButton {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes spinGlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1080px) {
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding: 28px;
+    border-radius: 24px;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+}

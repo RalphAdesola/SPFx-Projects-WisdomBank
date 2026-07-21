@@ -1,0 +1,67 @@
+.assistantContainer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.sidebar {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.sidebarHeader {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.contextItem {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #4b5563;
+}
+
+.suggestions {
+  display: grid;
+  gap: 10px;
+}
+
+.suggestions span {
+  display: inline-flex;
+  padding: 10px 14px;
+  background: #eef2ff;
+  border-radius: 999px;
+  color: #4338ca;
+  font-size: 13px;
+}
+
+.chatPanel {
+  display: grid;
+  gap: 16px;
+}
+
+.headerBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatHistory {
+  min-height: 420px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.errorText {
+  color: #ef4444;
+}

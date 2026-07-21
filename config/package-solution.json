@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "edu-smart-ai-client-side-solution",
+    "id": "afd03157-24c6-40b1-9599-151fcd33b5f2",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "EduSmartAI description"
+      },
+      "longDescription": {
+        "default": "EduSmartAI description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "edu-smart-ai Feature",
+        "description": "The feature that activates elements of the edu-smart-ai solution.",
+        "id": "f31f3f0a-2801-4419-a066-64fb43203bc4",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/edu-smart-ai.sppkg"
+  }
+}

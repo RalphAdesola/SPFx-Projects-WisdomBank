@@ -1,0 +1,21 @@
+.container {
+  display: grid;
+  gap: 24px;
+}
+
+.quizArea {
+  display: grid;
+  gap: 24px;
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  color: #6b7280;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}

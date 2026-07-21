@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "edu-smart-ai-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/eduSmartAi/EduSmartAiWebPart.js",
+          "manifest": "./src/webparts/eduSmartAi/EduSmartAiWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "EduSmartAiWebPartStrings": "lib/webparts/eduSmartAi/loc/{locale}.js"
+  }
+}

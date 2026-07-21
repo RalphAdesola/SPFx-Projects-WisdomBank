@@ -1,0 +1,116 @@
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 24px rgba(15, 23, 42, 0.04);
+}
+
+.sidebarDark {
+  background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+.sidebarLight {
+  background: linear-gradient(180deg, #ffffff 0%, #f8f8f9 100%);
+  border-right: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+  padding: 2px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.16);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: inherit;
+  opacity: 0.72;
+}
+
+.sidebar :global(.ms-Nav-linkText),
+.sidebar :global(.ms-Button-icon) {
+  color: inherit;
+}
+
+.sidebar :global(.ms-Nav-link) {
+  border-radius: 12px;
+  color: inherit;
+}
+
+.sidebarDark :global(.ms-Nav-link:hover) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebarLight :global(.ms-Nav-link:hover) {
+  background: rgba(79, 70, 229, 0.06);
+}
+
+.sidebar :global(.ms-Nav-link.is-selected),
+.sidebar :global(.ms-Nav-compositeLink.is-selected .ms-Nav-link) {
+  background: linear-gradient(90deg, #eef2ff 0%, #e0e7ff 100%);
+  color: #4f46e5;
+  box-shadow: inset 0 0 0 1px rgba(79, 70, 229, 0.08);
+}
+
+.sidebar :global(.ms-Nav-link.is-selected .ms-Nav-linkText),
+.sidebar :global(.ms-Nav-compositeLink.is-selected .ms-Nav-linkText) {
+  color: #4f46e5;
+}
+
+.logoutArea {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.actionRow {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.navIconButton,
+.logoutButton {
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: inherit;
+}
+
+.navIconButton:hover,
+.navIconButton:focus {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.logoutButton:hover,
+.logoutButton:focus {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}

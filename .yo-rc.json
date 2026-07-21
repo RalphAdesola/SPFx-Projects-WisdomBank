@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.20.8",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.24.0"
+    },
+    "version": "1.20.0",
+    "libraryName": "edu-smart-ai",
+    "libraryId": "afd03157-24c6-40b1-9599-151fcd33b5f2",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "EduSmartAI",
+    "solutionShortDescription": "EduSmartAI description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

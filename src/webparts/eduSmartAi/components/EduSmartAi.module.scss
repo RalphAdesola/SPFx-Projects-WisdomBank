@@ -1,0 +1,46 @@
+.appShell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.appShellDark {
+  background: #050505;
+  color: #f5f5f5;
+}
+
+.appShellLight {
+  background: #f7f7f8;
+  color: #111111;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 20px 28px 20px 20px;
+  position: relative;
+}
+
+.mainContentDark {
+  background: linear-gradient(135deg, #050505 0%, #0d0d0d 100%);
+}
+
+.mainContentLight {
+  background: linear-gradient(135deg, #f7f7f8 0%, #ffffff 100%);
+}
+
+.mainContentDark :global(.ms-Persona-primaryText),
+.mainContentDark :global(.ms-Persona-secondaryText),
+.mainContentDark :global(.ms-TextField-field),
+.mainContentDark :global(.ms-Dropdown-title) {
+  color: #111827;
+}
+
+.mainContentDark :global(.ms-Button--icon .ms-Button-icon) {
+  color: inherit;
+}
+
+.errorCard {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
