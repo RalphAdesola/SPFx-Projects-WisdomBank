@@ -1,9 +1,14 @@
 import * as React from 'react';
-import { IQuiz } from '../../types/IQuiz';
 import styles from './QuizQuestion.module.scss';
 
+export interface IAssessmentQuestion {
+  text: string;
+  options: string[];
+  answer: string;
+}
+
 export interface IQuizQuestionProps {
-  question: any;
+  question: IAssessmentQuestion;
   index: number;
   selected?: string;
   onSelect: (value: string) => void;

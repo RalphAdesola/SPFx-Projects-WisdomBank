@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, Nav } from '@fluentui/react';
+import { IconButton, INavLink, Nav } from '@fluentui/react';
 import { AppRoute } from '../../hooks/useNavigation';
 import botImage from '../../assets/icons8-bot-100.png';
 import styles from './Navigation.module.scss';
@@ -10,21 +10,25 @@ export interface INavigationProps {
   institutionName: string;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
+  unreadNotificationCount: number;
 }
 
 const navLinks = [
   { name: 'Dashboard', route: AppRoute.Dashboard },
   { name: 'My Learning', route: AppRoute.MyCourses },
   { name: 'Recommended Learning', route: AppRoute.LearningPath },
-  { name: 'Learning Material', route: AppRoute.Lesson },
-  { name: 'Assessment', route: AppRoute.Quiz },
-  { name: 'AI Assistant', route: AppRoute.AIAssistant },
   { name: 'Notifications', route: AppRoute.Notifications },
-  { name: 'Analytics', route: AppRoute.Analytics },
   { name: 'Certificates', route: AppRoute.Certificates }
 ];
 
-const Navigation: React.FC<INavigationProps> = ({ selectedRoute, onNavigate, institutionName, theme, onToggleTheme }) => {
+const Navigation: React.FC<INavigationProps> = ({
+  selectedRoute,
+  onNavigate,
+  institutionName,
+  theme,
+  onToggleTheme,
+  unreadNotificationCount
+}) => {
   const isDarkTheme = theme === 'dark';
 
   return (
@@ -39,13 +43,27 @@ const Navigation: React.FC<INavigationProps> = ({ selectedRoute, onNavigate, ins
 
       <nav>
         <Nav
+          key={`${selectedRoute}-${unreadNotificationCount}`}
+          selectedKey={selectedRoute}
+          onRenderLink={(link?: INavLink) => (
+            <div className={styles.navLinkText}>
+              <span>{link?.name}</span>
+              {link?.key === AppRoute.Notifications && unreadNotificationCount > 0 ? (
+                <span className={styles.notificationCount}>({unreadNotificationCount})</span>
+              ) : null}
+            </div>
+          )}
           groups={[
             {
               links: navLinks.map((item) => ({
                 key: item.route,
                 name: item.name,
+                ariaLabel: item.route === AppRoute.Notifications && unreadNotificationCount > 0
+                  ? `Notifications, ${unreadNotificationCount} unread`
+                  : item.name,
                 url: '#',
-                onClick: () => {
+                onClick: (event?: React.MouseEvent<HTMLElement>) => {
+                  event?.preventDefault();
                   onNavigate(item.route);
                 },
                 isSelected: selectedRoute === item.route
@@ -69,13 +87,6 @@ const Navigation: React.FC<INavigationProps> = ({ selectedRoute, onNavigate, ins
             ariaLabel={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
             title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
             onClick={onToggleTheme}
-          />
-          <IconButton
-            className={`${styles.navIconButton} ${styles.logoutButton}`}
-            iconProps={{ iconName: 'SignOut' }}
-            ariaLabel="Log out"
-            title="Log out"
-            onClick={() => onNavigate(AppRoute.Landing)}
           />
         </div>
       </div>

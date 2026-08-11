@@ -18,6 +18,16 @@ export const DIFFICULTY_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
 export const NOTIFICATION_TYPES = ['Study Plan', 'Quiz Reminder', 'Milestone', 'New Material', 'System'];
 
+export const SHAREPOINT_LISTS = {
+  aiAssistantLogs: 'AI Assistant Logs',
+  notifications: 'List Notification',
+  learningMaterials: 'Learning Materials',
+  learningProgress: 'Employee Learning Progress',
+  assessments: 'Assessment',
+  assessmentQuestions: 'Assessment Questions',
+  assessmentResults: 'Assessment Results'
+} as const;
+
 export const ROUTES = {
   landing: 'landing',
   dashboard: 'dashboard',

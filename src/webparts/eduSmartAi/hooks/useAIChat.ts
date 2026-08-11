@@ -19,6 +19,42 @@ export function useAIChat(config: IAIServiceConfig): IAIChatResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error>();
 
+  const buildResponse = useCallback((text: string): string => {
+    const normalized = text.toLowerCase();
+    const summary = (config.courseSummary || '').trim();
+
+    if (config.assistantMode === 'summary') {
+      if (summary) {
+        return summary;
+      }
+
+      return 'I could not find a saved summary for this course yet. Please try again after the summary has been added.';
+    }
+
+    if (summary) {
+      if (normalized.includes('what') || normalized.includes('why') || normalized.includes('how') || normalized.includes('explain')) {
+        return `Based on this course, here is the key idea: ${summary}`;
+      }
+
+      return `From this course summary, the main takeaway is: ${summary}`;
+    }
+
+    if (normalized.includes('summar')) {
+      return 'This course summary is not available yet.';
+    }
+    if (normalized.includes('policy')) {
+      return 'This course focuses on responsible handling of company information, approval workflows, and incident reporting.';
+    }
+    if (normalized.includes('assessment')) {
+      return 'I can help you review the key takeaways before your assessment, but I will not give direct answers.';
+    }
+    if (normalized.includes('simple')) {
+      return 'In simple terms: follow the approved process, keep information secure, and escalate concerns promptly.';
+    }
+
+    return 'I can help explain the course using the summary stored for this material. Try asking about the main idea, key steps, or why the topic matters.';
+  }, [config.assistantMode, config.courseSummary]);
+
   const sendMessage = useCallback(async (text: string) => {
     setIsLoading(true);
     setError(undefined);
@@ -33,17 +69,7 @@ export function useAIChat(config: IAIServiceConfig): IAIChatResult {
     setMessages(nextMessages);
 
     try {
-      const normalized = text.toLowerCase();
-      let response = 'I can help summarize policies, explain document sections, and prepare you for assessments.';
-      if (normalized.includes('summar')) {
-        response = 'Here is a concise summary: the material highlights compliance expectations, secure collaboration, and the review steps required before submission.';
-      } else if (normalized.includes('policy')) {
-        response = 'This policy focuses on responsible handling of company information, approval workflows, and incident reporting.';
-      } else if (normalized.includes('assessment')) {
-        response = 'I have prepared a short practice set for the assessment, focused on the key takeaways from this material.';
-      } else if (normalized.includes('simple')) {
-        response = 'In simple terms: follow the approved process, keep information secure, and escalate concerns promptly.';
-      }
+      const response = buildResponse(text);
 
       const assistantMessage: IMessage = {
         id: `${Date.now()}-assistant`,
@@ -57,7 +83,7 @@ export function useAIChat(config: IAIServiceConfig): IAIChatResult {
     } finally {
       setIsLoading(false);
     }
-  }, [messages]);
+  }, [buildResponse, messages]);
 
   const clearHistory = useCallback(() => {
     setMessages([]);
@@ -66,16 +92,20 @@ export function useAIChat(config: IAIServiceConfig): IAIChatResult {
 
   useEffect(() => {
     if (messages.length === 0) {
+      const welcome =
+        config.assistantMode === 'summary'
+          ? `Here is your course summary.`
+          : `Ask me anything about this course and I will help you work through it.`;
       setMessages([
         {
           id: 'welcome-assistant',
           role: 'assistant',
-          content: `Hi there, I am your Enterprise Learning Assistant. I can summarize documents, explain policies, and prepare you for assessments.`,
+          content: welcome,
           timestamp: new Date().toISOString()
         }
       ]);
     }
-  }, [messages.length]);
+  }, [config.assistantMode, messages.length]);
 
   return { messages, isLoading, error, sendMessage, clearHistory };
 }

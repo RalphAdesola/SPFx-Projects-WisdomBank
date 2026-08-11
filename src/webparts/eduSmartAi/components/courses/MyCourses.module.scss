@@ -7,60 +7,94 @@
 .topBar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
+  gap: 20px;
   background: linear-gradient(135deg, #0f766e 0%, #475569 58%, #334155 100%);
   color: #f8fafc;
-  border-radius: 28px;
-  padding: 24px 32px;
+  border-radius: 16px;
+  padding: 18px 20px;
   box-shadow: 0 20px 48px rgba(15, 23, 42, 0.14);
+}
+
+.topBar > div:first-child {
+  width: min(32%, 330px);
+  min-width: 250px;
 }
 
 .brandHeader {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 10px;
 }
 
 .brandLogo {
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.18);
   font-weight: 700;
   color: #ffffff;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
 }
 
 .brandTitle {
-  font-size: 1rem;
+  font-size: 0.86rem;
   font-weight: 700;
 }
 
 .brandSubtitle {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   color: rgba(248, 250, 252, 0.8);
 }
 
-.pageSubtitle {
+.topBar h1 {
   margin: 12px 0 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.pageSubtitle {
+  margin: 6px 0 0;
   color: rgba(248, 250, 252, 0.88);
-  max-width: 720px;
+  max-width: 330px;
+  font-size: 0.75rem;
+  line-height: 1.45;
 }
 
-.userPanel {
+.summaryGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(100px, 1fr));
+  align-items: stretch;
+  gap: 8px;
+  max-width: 660px;
+}
+
+.summaryCard {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 62px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.notifyButton {
-  min-width: 110px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.12);
+.summaryCard span {
+  color: rgba(248, 250, 252, 0.82);
+  font-size: 0.64rem;
+  line-height: 1.25;
+}
+
+.summaryCard strong {
+  margin-top: 8px;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 1.05rem;
+  line-height: 1;
 }
 
 .headerBar {
@@ -156,6 +190,15 @@
     align-items: stretch;
   }
 
+  .topBar > div:first-child {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .summaryGrid {
+    max-width: none;
+  }
+
   .searchActions {
     width: 100%;
   }
@@ -166,7 +209,7 @@
     justify-content: center;
   }
 
-  .userPanel {
-    justify-content: space-between;
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

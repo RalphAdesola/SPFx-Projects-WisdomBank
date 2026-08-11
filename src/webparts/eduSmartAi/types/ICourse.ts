@@ -12,6 +12,19 @@ export interface ICourse {
   focusArea?: string;
   lessons?: number;
   quizzes?: number;
+  quizAttempts?: number;
   highlight?: string;
   gradient?: string;
+  materialCode?: string;
+  materialType?: string;
+  department?: string;
+  audienceLevel?: string;
+  isRequired?: boolean;
+  estimatedMinutes?: number;
+  expiryDate?: string;
+  reviewDate?: string;
+  tags?: string[];
+  fileName?: string;
+  documentUrl?: string;
+  modifiedDate?: string;
 }

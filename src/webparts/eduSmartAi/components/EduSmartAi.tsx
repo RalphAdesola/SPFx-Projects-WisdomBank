@@ -9,80 +9,77 @@ import PersonalizedLearningPath from './learningPath/PersonalizedLearningPath';
 import LessonScreen from './lesson/LessonScreen';
 import QuizScreen from './quiz/QuizScreen';
 import AIAssistant from './aiAssistant/AIAssistant';
-import PerformanceAnalytics from './analytics/PerformanceAnalytics';
 import NotificationPanel from './notifications/NotificationPanel';
+import CertificateScreen from './certificates/CertificateScreen';
 import styles from './EduSmartAi.module.scss';
 import { useEffect, useState } from 'react';
+import { ICourse } from '../types/ICourse';
+import { IUser } from '../types/IUser';
+import { LearningProgressService } from '../services/LearningProgressService';
+import { useNotifications } from '../hooks/useNotifications';
 
 function resetWorkbenchWidth(): void {
-    // Use plain JavaScript to set the max-width style to 'none'
-    const workbenchContent = document.getElementById("workbenchPageContent");
-    if (workbenchContent) {
-      (workbenchContent as HTMLElement).style.maxWidth = "none";
+  const selectorsToHide = [
+    '#spSiteHeader',
+    '#spLeftNav',
+    '#spCommandBar',
+    '#sp-appBar',
+    '#CommentsWrapper',
+    '#SuiteNavPlaceHolder',
+    '[data-automation-id="pageHeader"]',
+    '[data-automation-id="pageCommandBar"]'
+  ].join(', ');
+
+  const selectorsToStretch = [
+    '#workbenchPageContent',
+    '#spPageCanvasContent',
+    '.SPCanvas-canvas',
+    '.ControlZone',
+    '.CanvasZone',
+    '.CanvasSection'
+  ].join(', ');
+
+  const css = `
+    ${selectorsToHide} {
+      display: none !important;
     }
- 
-    const sideNav = document.getElementById("spLeftNav");
-    if (sideNav) {
-      (sideNav as HTMLElement).style.display = "none";
+
+    html, body {
+      overflow-x: hidden !important;
     }
- 
-    // ? uncomment this after deploying
-    // ? Hide navigation elements
-    const siteHeader = document.getElementById("spSiteHeader");
-    if (siteHeader) {
-      (siteHeader as HTMLElement).style.display = "none";
+
+    ${selectorsToStretch} {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
     }
- 
-    const commandBar = document.getElementById("spCommandBar");
-    if (commandBar) {
-      (commandBar as HTMLElement).style.display = "none";
+
+    .CanvasZone > div {
+      max-width: 100vw !important;
+      margin: 0 !important;
     }
- 
-    const appBar = document.getElementById("sp-appBar");
-    if (appBar) {
-      (appBar as HTMLElement).style.display = "none";
-    }
- 
-    const comments = document.getElementById("CommentsWrapper");
-    if (comments) {
-      (comments as HTMLElement).style.display = "none";
-    }
- 
-    // ? Force full width
-    document
-      .querySelectorAll(
-        ".SPCanvas-canvas, .ControlZone, .CanvasZone, .CanvasSection",
-      )
-      .forEach((element) => {
-        // (element as HTMLElement).style.maxWidth = "none";
-        (element as HTMLElement).style.maxWidth = "100vw";
-        (element as HTMLElement).style.width = "100vw";
-        (element as HTMLElement).style.padding = "0";
-        (element as HTMLElement).style.margin = "0";
-        (element as HTMLElement).style.gap = "0";
-      });
- 
-    // Fix max width issue of canvas zone
-    const css: string = `
-      .CanvasZone > div {
-        max-width: 100vw !important;
-        margin: 0 !important;
-      }
-    `;
-    const head =
-      document.getElementsByTagName("head")[0] || document.documentElement;
-    const styleElement = document.createElement("style");
-    styleElement.innerHTML = css;
+  `;
+
+  const head = document.getElementsByTagName('head')[0] || document.documentElement;
+  let styleElement = document.getElementById('edu-smart-ai-fullscreen-style') as HTMLStyleElement | null;
+  if (!styleElement) {
+    styleElement = document.createElement('style');
+    styleElement.id = 'edu-smart-ai-fullscreen-style';
     head.appendChild(styleElement);
- 
-    document.querySelectorAll(".SPCanvas-canvas").forEach((element) => {
-      (element as HTMLElement).style.maxWidth = "none";
-    });
- 
-    document.querySelectorAll(".CanvasZone").forEach((element) => {
-      (element as HTMLElement).style.maxWidth = "none";
-    });
   }
+  styleElement.textContent = css;
+
+  document.querySelectorAll(selectorsToStretch).forEach((element) => {
+    const target = element as HTMLElement;
+    target.style.maxWidth = '100vw';
+    target.style.width = '100vw';
+    target.style.margin = '0';
+    target.style.padding = '0';
+  });
+}
 
 
 
@@ -90,9 +87,37 @@ function resetWorkbenchWidth(): void {
 const EduSmartAI: React.FC<IEduSmartAiProps> = (props) => {
   const { route, navigate } = useNavigation();
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [selectedCourse, setSelectedCourse] = useState<ICourse | undefined>();
+  const [assistantMode, setAssistantMode] = useState<'summary' | 'question'>('question');
+  const {
+    data: notifications,
+    isLoading: notificationsLoading,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification
+  } = useNotifications(props.sp, props.userId);
+  const currentUser: IUser = {
+    id: props.userLoginName,
+    loginName: props.userLoginName,
+    displayName: props.userDisplayName || 'Learner',
+    email: props.userEmail
+  };
 
   useEffect(() => {
     resetWorkbenchWidth();
+    const observer = new MutationObserver(() => {
+      resetWorkbenchWidth();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const isDarkTheme = theme === 'dark';
@@ -100,6 +125,25 @@ const EduSmartAI: React.FC<IEduSmartAiProps> = (props) => {
 
   const handleGetStarted = () => {
     navigate(AppRoute.Dashboard);
+  };
+
+  const handleOpenCourse = (course: ICourse): void => {
+    new LearningProgressService(props.sp)
+      .markStarted(props.userId, currentUser.displayName, course.title, Number(course.id))
+      .catch(() => undefined);
+    setSelectedCourse(course);
+    navigate(AppRoute.Lesson);
+  };
+
+  const handleLaunchAssessment = (course: ICourse): void => {
+    setSelectedCourse(course);
+    navigate(AppRoute.Quiz);
+  };
+
+  const handleOpenAssistant = (course: ICourse, mode: 'summary' | 'question'): void => {
+    setSelectedCourse(course);
+    setAssistantMode(mode);
+    navigate(AppRoute.AIAssistant);
   };
 
   return (
@@ -111,6 +155,7 @@ const EduSmartAI: React.FC<IEduSmartAiProps> = (props) => {
           institutionName={props.institutionName ?? 'Enterprise knowledge & learning platform'}
           theme={theme}
           onToggleTheme={() => setTheme(isDarkTheme ? 'light' : 'dark')}
+          unreadNotificationCount={unreadCount}
         />
       )}
       <main className={`${styles.mainContent} ${useDarkShell ? styles.mainContentDark : styles.mainContentLight}`}>
@@ -120,23 +165,82 @@ const EduSmartAI: React.FC<IEduSmartAiProps> = (props) => {
             theme="light"
           />
         )}
-        {route === AppRoute.Dashboard && <StudentDashboard theme={theme} />}
-        {route === AppRoute.MyCourses && <MyCourses />}
-        {route === AppRoute.LearningPath && <PersonalizedLearningPath theme={theme} />}
-        {route === AppRoute.Lesson && <LessonScreen theme={theme} />}
-        {route === AppRoute.Quiz && <QuizScreen theme={theme} />}
+        {route === AppRoute.Dashboard && (
+          <StudentDashboard
+            theme={theme}
+            sp={props.sp}
+            onOpenCourse={handleOpenCourse}
+            currentUser={currentUser}
+          />
+        )}
+        {route === AppRoute.MyCourses && (
+          <MyCourses
+            sp={props.sp}
+            onOpenCourse={handleOpenCourse}
+            onTakeQuiz={handleLaunchAssessment}
+            currentUser={currentUser}
+            currentUserId={props.userId}
+          />
+        )}
+        {route === AppRoute.LearningPath && (
+          <PersonalizedLearningPath
+            theme={theme}
+            sp={props.sp}
+            currentUser={currentUser}
+            currentUserId={props.userId}
+            onOpenCourse={handleOpenCourse}
+            onTakeQuiz={handleLaunchAssessment}
+          />
+        )}
+        {route === AppRoute.Lesson && (
+          <LessonScreen
+            theme={theme}
+            sp={props.sp}
+            course={selectedCourse}
+            onOpenAssistant={handleOpenAssistant}
+            onLaunchAssessment={handleLaunchAssessment}
+            currentUser={currentUser}
+            currentUserId={props.userId}
+          />
+        )}
+        {route === AppRoute.Quiz && (
+          <QuizScreen
+            theme={theme}
+            sp={props.sp}
+            currentUser={currentUser}
+            currentUserId={props.userId}
+            course={selectedCourse}
+            onViewCertificates={() => navigate(AppRoute.Certificates)}
+          />
+        )}
         {route === AppRoute.AIAssistant && (
           <AIAssistant
+            sp={props.sp}
             apiKey={props.aiApiKey ?? ''}
             studentName={props.userDisplayName || 'Student'}
             studentLevel={props.defaultStudentLevel ?? 'Beginner'}
-            currentSubject="Mathematics"
+            currentSubject={selectedCourse?.subject || selectedCourse?.title || 'General'}
+            assistantMode={assistantMode}
+            course={selectedCourse}
           />
         )}
-        {route === AppRoute.Analytics && <PerformanceAnalytics theme={theme} />}
-        {route === AppRoute.Notifications && <NotificationPanel theme={theme} />}
+        {route === AppRoute.Notifications && (
+          <NotificationPanel
+            theme={theme}
+            notifications={notifications}
+            isLoading={notificationsLoading}
+            onMarkAsRead={markAsRead}
+            onMarkAllAsRead={markAllAsRead}
+            onDeleteNotification={deleteNotification}
+          />
+        )}
         {route === AppRoute.Certificates && (
-          <div className={styles.errorCard}>Certificates and completions will appear here soon.</div>
+          <CertificateScreen
+            theme={theme}
+            sp={props.sp}
+            currentUserId={props.userId}
+            learnerName={currentUser.displayName}
+          />
         )}
       </main>
     </div>

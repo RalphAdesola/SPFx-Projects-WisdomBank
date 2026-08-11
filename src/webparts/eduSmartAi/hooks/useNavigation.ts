@@ -8,7 +8,6 @@ export enum AppRoute {
   Lesson = 'learning-material',
   Quiz = 'assessment',
   AIAssistant = 'ai-assistant',
-  Analytics = 'analytics',
   Notifications = 'notifications',
   Certificates = 'certificates'
 }

@@ -7,6 +7,7 @@ import {
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
+import { spfi, SPFI, SPFx } from '@pnp/sp';
 
 import * as strings from 'EduSmartAiWebPartStrings';
 import EduSmartAi from './components/EduSmartAi';
@@ -20,6 +21,7 @@ export default class EduSmartAiWebPart extends BaseClientSideWebPart<IEduSmartAi
 
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
+  private _sp!: SPFI;
 
   public render(): void {
     const element: React.ReactElement<IEduSmartAiProps> = React.createElement(
@@ -29,7 +31,11 @@ export default class EduSmartAiWebPart extends BaseClientSideWebPart<IEduSmartAi
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        userDisplayName: this.context.pageContext.user.displayName,
+        userEmail: this.context.pageContext.user.email,
+        userLoginName: this.context.pageContext.user.loginName,
+        userId: this.context.pageContext.legacyPageContext.userId,
+        sp: this._sp
       }
     );
 
@@ -37,6 +43,8 @@ export default class EduSmartAiWebPart extends BaseClientSideWebPart<IEduSmartAi
   }
 
   protected onInit(): Promise<void> {
+    this._sp = spfi().using(SPFx(this.context));
+
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });

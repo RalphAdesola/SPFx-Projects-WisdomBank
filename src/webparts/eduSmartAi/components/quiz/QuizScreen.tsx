@@ -1,35 +1,88 @@
 import * as React from 'react';
-import { PrimaryButton } from '@fluentui/react';
+import { MessageBar, MessageBarType, PrimaryButton } from '@fluentui/react';
+import { SPFI } from '@pnp/sp';
 import PageHeader from '../shared/PageHeader';
 import SkeletonLoader from '../shared/SkeletonLoader';
-import QuizQuestion from './QuizQuestion';
+import QuizQuestion, { IAssessmentQuestion } from './QuizQuestion';
 import QuizResults from './QuizResults';
 import { useQuiz } from '../../hooks/useQuiz';
+import { IUser } from '../../types/IUser';
+import { ICourse } from '../../types/ICourse';
+import { getCourseAssessment } from './assessmentQuestionBanks';
 import styles from './QuizScreen.module.scss';
-
-const sampleQuestions = [
-  { text: 'Which action should be taken when a suspicious email is received?', options: ['Forward it to a colleague', 'Report it and do not click any links', 'Delete it without reporting', 'Reply with your password'], answer: 'Report it and do not click any links' },
-  { text: 'What is the best way to handle confidential company information?', options: ['Store it in a public folder', 'Share it over personal email', 'Use approved tools and access controls', 'Leave it on a shared desk'], answer: 'Use approved tools and access controls' },
-  { text: 'True or False: MFA adds an extra layer of protection to your account.', options: ['True', 'False'], answer: 'True' }
-];
 
 export interface IQuizScreenProps {
   theme: 'dark' | 'light';
+  sp: SPFI;
+  currentUser: IUser;
+  currentUserId: number;
+  course?: ICourse;
+  onViewCertificates: () => void;
 }
 
-const QuizScreen: React.FC<IQuizScreenProps> = ({ theme }) => {
-  const { isLoading } = useQuiz();
+const QuizScreen: React.FC<IQuizScreenProps> = ({
+  theme,
+  sp,
+  currentUser,
+  currentUserId,
+  course,
+  onViewCertificates
+}) => {
+  const { isLoading, isSubmitting, error, submitQuiz, resetSubmission } = useQuiz(sp);
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [answers, setAnswers] = React.useState<Record<number, string>>({});
   const [submitted, setSubmitted] = React.useState(false);
+  const assessment = getCourseAssessment(course?.title);
+  const questions: IAssessmentQuestion[] = assessment.questions;
 
-  const allAnswered = sampleQuestions.length === Object.keys(answers).length;
-  const correctCount = Object.values(answers).filter((value, index) => value === sampleQuestions[index].answer).length;
-  const score = Math.round((correctCount / sampleQuestions.length) * 100);
-  const passed = score >= 70;
+  const allAnswered = questions.length === Object.keys(answers).length;
+  const correctCount = questions.reduce(
+    (total, question, index) => total + (answers[index] === question.answer ? 1 : 0),
+    0
+  );
+  const score = Math.round((correctCount / questions.length) * 100);
+  const passed = score >= assessment.passingScore;
 
-  const handleSelect = (value: string) => {
+  const handleSelect = (value: string): void => {
     setAnswers((prev) => ({ ...prev, [currentQuestion]: value }));
+  };
+
+  const handleSubmit = async (): Promise<void> => {
+    const saved = await submitQuiz({
+      assessmentTitle: assessment.title,
+      courseTitle: course?.title || 'Workplace Cybersecurity Awareness',
+      relatedMaterialTitle: course?.title || 'Workplace Cybersecurity Awareness',
+      passingScore: assessment.passingScore,
+      timeLimitMinutes: assessment.timeLimitMinutes,
+      questions: questions.map((question, index) => ({
+        title: `Question ${index + 1}`,
+        questionText: question.text,
+        questionType: question.options.length === 2 ? 'True/False' : 'Multiple Choice',
+        options: question.options,
+        correctAnswer: question.answer,
+        points: 1
+      })),
+      userId: currentUserId,
+      userDisplayName: currentUser.displayName,
+      userEmail: currentUser.email || currentUser.loginName,
+      score,
+      passed,
+      correctAnswers: correctCount,
+      incorrectAnswers: questions.length - correctCount,
+      totalQuestions: questions.length,
+      answersJSON: JSON.stringify(
+        questions.map((question, index) => ({
+          question: question.text,
+          selectedAnswer: answers[index],
+          isCorrect: answers[index] === question.answer
+        }))
+      ),
+      submittedAt: new Date().toISOString()
+    });
+
+    if (saved) {
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -38,27 +91,39 @@ const QuizScreen: React.FC<IQuizScreenProps> = ({ theme }) => {
       {isLoading ? (
         <SkeletonLoader lines={4} />
       ) : submitted ? (
-        <QuizResults
-          score={score}
-          passed={passed}
-          correctCount={correctCount}
-          incorrectCount={sampleQuestions.length - correctCount}
-          onRetake={() => {
-            setAnswers({});
-            setSubmitted(false);
-            setCurrentQuestion(0);
-          }}
-        />
+        <>
+          <MessageBar messageBarType={MessageBarType.success}>
+            Assessment completed and scored. Your result has been saved. Proceed to view/download your certificate.
+          </MessageBar>
+          <QuizResults
+            score={score}
+            passed={passed}
+            correctCount={correctCount}
+            incorrectCount={questions.length - correctCount}
+            onViewCertificates={onViewCertificates}
+            onRetake={() => {
+              setAnswers({});
+              setSubmitted(false);
+              setCurrentQuestion(0);
+              resetSubmission();
+            }}
+          />
+        </>
       ) : (
         <div className={styles.quizArea}>
+          {error ? (
+            <MessageBar messageBarType={MessageBarType.error}>
+              Assessment could not be saved: {error.message}
+            </MessageBar>
+          ) : null}
           <div className={styles.navBar}>
             <span>
-              Question {currentQuestion + 1} of {sampleQuestions.length}
+              Question {currentQuestion + 1} of {questions.length}
             </span>
-            <span>Time left: 12:00</span>
+            <span>Time left: {assessment.timeLimitMinutes}:00</span>
           </div>
           <QuizQuestion
-            question={sampleQuestions[currentQuestion]}
+            question={questions[currentQuestion]}
             index={currentQuestion}
             selected={answers[currentQuestion]}
             onSelect={handleSelect}
@@ -71,10 +136,14 @@ const QuizScreen: React.FC<IQuizScreenProps> = ({ theme }) => {
             />
             <PrimaryButton
               text="Next"
-              onClick={() => setCurrentQuestion(Math.min(sampleQuestions.length - 1, currentQuestion + 1))}
-              disabled={currentQuestion === sampleQuestions.length - 1}
+              onClick={() => setCurrentQuestion(Math.min(questions.length - 1, currentQuestion + 1))}
+              disabled={currentQuestion === questions.length - 1}
             />
-            <PrimaryButton text="Submit Assessment" onClick={() => setSubmitted(true)} disabled={!allAnswered} />
+            <PrimaryButton
+              text={isSubmitting ? 'Submitting...' : 'Submit Assessment'}
+              onClick={handleSubmit}
+              disabled={!allAnswered || isSubmitting}
+            />
           </div>
         </div>
       )}

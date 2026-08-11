@@ -14,10 +14,10 @@ const ChatInput: React.FC<IChatInputProps> = ({ value, onChange, onSend, canSend
     <TextField
       multiline
       autoAdjustHeight
-      placeholder="Ask your AI tutor a question..."
+      placeholder="Ask me your question"
       value={value}
       onChange={(_, newValue) => onChange(newValue || '')}
-      aria-label="Ask your AI tutor a question"
+      aria-label="Ask me your question"
     />
     <IconButton iconProps={{ iconName: 'Send' }} onClick={onSend} disabled={!canSend} aria-label="Send message" />
   </div>

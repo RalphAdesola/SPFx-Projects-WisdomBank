@@ -51,3 +51,9 @@ p {
   font-size: 24px;
   color: #111827;
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

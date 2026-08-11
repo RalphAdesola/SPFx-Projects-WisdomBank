@@ -11,14 +11,16 @@
 }
 
 .bubble {
-  background: #eef2ff;
-  padding: 16px;
+  background: #f3f4f6;
+  padding: 16px 18px;
   border-radius: 18px;
-  max-width: 72%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  max-width: 78%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  line-height: 1.6;
+  color: #111827;
 }
 
 .user .bubble {
-  background: #4f46e5;
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
   color: white;
 }

@@ -80,6 +80,19 @@
   color: #4f46e5;
 }
 
+.navLinkText {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.notificationCount {
+  flex: 0 0 auto;
+  color: #dc2626;
+  font-weight: 700;
+}
+
 .logoutArea {
   margin-top: auto;
   padding-top: 24px;
@@ -109,8 +122,3 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-.logoutButton:hover,
-.logoutButton:focus {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.2);
-}

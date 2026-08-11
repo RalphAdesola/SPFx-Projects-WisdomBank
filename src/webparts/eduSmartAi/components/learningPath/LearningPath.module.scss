@@ -3,7 +3,20 @@
   gap: 24px;
 }
 
+.courseGrid {
+  display: grid;
+  gap: 18px;
+}
+
 .timeline {
   display: grid;
   gap: 16px;
+}
+
+.empty {
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #475569;
 }

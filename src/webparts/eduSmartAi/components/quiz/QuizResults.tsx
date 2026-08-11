@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PrimaryButton } from '@fluentui/react';
+import { DefaultButton, PrimaryButton } from '@fluentui/react';
 import styles from './QuizResults.module.scss';
 
 export interface IQuizResultsProps {
@@ -8,9 +8,17 @@ export interface IQuizResultsProps {
   correctCount: number;
   incorrectCount: number;
   onRetake: () => void;
+  onViewCertificates: () => void;
 }
 
-const QuizResults: React.FC<IQuizResultsProps> = ({ score, passed, correctCount, incorrectCount, onRetake }) => (
+const QuizResults: React.FC<IQuizResultsProps> = ({
+  score,
+  passed,
+  correctCount,
+  incorrectCount,
+  onRetake,
+  onViewCertificates
+}) => (
   <div className={styles.resultsCard}>
     <div className={styles.header}>
       <div>
@@ -28,7 +36,14 @@ const QuizResults: React.FC<IQuizResultsProps> = ({ score, passed, correctCount,
         <strong>{incorrectCount}</strong>
       </div>
     </div>
-    <PrimaryButton text="Retake Quiz" onClick={onRetake} />
+    <div className={styles.actions}>
+      <DefaultButton text="Retake Quiz" onClick={onRetake} />
+      <PrimaryButton
+        text="View Certificate"
+        iconProps={{ iconName: 'Certificate' }}
+        onClick={onViewCertificates}
+      />
+    </div>
   </div>
 );
 

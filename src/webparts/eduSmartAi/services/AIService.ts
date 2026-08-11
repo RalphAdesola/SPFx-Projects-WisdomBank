@@ -10,6 +10,8 @@ export interface IAIServiceConfig {
   studentName: string;
   studentLevel: string;
   currentSubject: string;
+  assistantMode?: 'summary' | 'question';
+  courseSummary?: string;
 }
 
 /**
@@ -19,7 +21,12 @@ export class AIService {
   constructor(private config: IAIServiceConfig) {}
 
   private buildSystemPrompt(): string {
+    const modeHint = this.config.assistantMode === 'summary'
+      ? 'The learner wants a concise summary of the current document first.'
+      : 'The learner wants help asking questions about the current course.';
+
     return `You are WisdomBank, an institution-controlled academic assistant for ${this.config.studentName}, a ${this.config.studentLevel} student currently studying ${this.config.currentSubject}.
+${modeHint}
 
 Your role:
 - Answer only curriculum-aligned academic questions

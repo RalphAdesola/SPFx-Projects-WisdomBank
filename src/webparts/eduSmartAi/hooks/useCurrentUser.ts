@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { IUser } from '../types/IUser';
 
 export interface IUserResult {
@@ -8,21 +7,13 @@ export interface IUserResult {
   refetch: () => void;
 }
 
-export function useCurrentUser(): IUserResult {
-  const [data] = useState<IUser | undefined>({
-    id: 'emp-1024',
-    loginName: 'demo.employee@contoso.com',
-    displayName: 'Jordan Lee',
-    email: 'jordan.lee@contoso.com'
-  });
-  const [isLoading] = useState(false);
-  const [error] = useState<Error | undefined>(undefined);
-
+export function useCurrentUser(currentUser?: IUser): IUserResult {
   const refetch = () => undefined;
 
-  useEffect(() => {
-    return undefined;
-  }, []);
-
-  return { data, isLoading, error, refetch };
+  return {
+    data: currentUser,
+    isLoading: false,
+    error: undefined,
+    refetch
+  };
 }

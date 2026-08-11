@@ -1,12 +1,13 @@
 .inputBar {
   display: grid;
-  grid-template-columns: 1fr 56px;
+  grid-template-columns: 1fr auto;
   gap: 12px;
   align-items: end;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
 }
 
 .ms-TextField-fieldGroup {

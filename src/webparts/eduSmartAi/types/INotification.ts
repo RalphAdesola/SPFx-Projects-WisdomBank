@@ -6,5 +6,6 @@ export interface INotification {
   type: string;
   isRead: boolean;
   createdDate?: string;
+  dueDate?: string;
   actionURL?: string;
 }

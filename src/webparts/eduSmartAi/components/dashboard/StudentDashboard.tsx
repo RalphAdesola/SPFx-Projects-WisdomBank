@@ -6,14 +6,20 @@ import { useStudentProgress } from '../../hooks/useStudentProgress';
 import PageHeader from '../shared/PageHeader';
 import SkeletonLoader from '../shared/SkeletonLoader';
 import styles from './StudentDashboard.module.scss';
+import { SPFI } from '@pnp/sp';
+import { ICourse } from '../../types/ICourse';
+import { IUser } from '../../types/IUser';
 
 export interface IStudentDashboardProps {
   theme: 'dark' | 'light';
+  sp: SPFI;
+  onOpenCourse: (course: ICourse) => void;
+  currentUser: IUser;
 }
 
-const StudentDashboard: React.FC<IStudentDashboardProps> = ({ theme }) => {
-  const { data: user, isLoading: userLoading } = useCurrentUser();
-  const { data: courses, isLoading: coursesLoading } = useCourses();
+const StudentDashboard: React.FC<IStudentDashboardProps> = ({ theme, sp, onOpenCourse, currentUser }) => {
+  const { data: user, isLoading: userLoading } = useCurrentUser(currentUser);
+  const { data: courses, isLoading: coursesLoading } = useCourses(sp);
   const { data: progress, isLoading: progressLoading } = useStudentProgress();
 
   const loading = userLoading || coursesLoading || progressLoading;
@@ -54,7 +60,7 @@ const StudentDashboard: React.FC<IStudentDashboardProps> = ({ theme }) => {
           </div>
 
           <div className={styles.courseGrid}>
-            {(courses || []).slice(0, 3).map((course) => (
+            {(courses || []).map((course) => (
               <div key={course.id} className={styles.courseCard}>
                 <div className={styles.cardHeader}>
                   <div>
@@ -63,11 +69,15 @@ const StudentDashboard: React.FC<IStudentDashboardProps> = ({ theme }) => {
                   </div>
                   <div className={styles.statusBadge}>{course.status}</div>
                 </div>
-                <p>{course.description}</p>
-                <div className={styles.progressBar}>
-                  <div className={styles.progressFill} style={{ width: `${Math.min(100, course.progress || 0)}%` }} />
+                <div className={styles.cardBody}>
+                  <p>{course.description}</p>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: `${Math.min(100, course.progress || 0)}%` }} />
+                  </div>
+                  <div className={styles.actionRow}>
+                    <DefaultButton text="Open Material" onClick={() => onOpenCourse(course)} />
+                  </div>
                 </div>
-                <DefaultButton text="Open Material" />
               </div>
             ))}
           </div>
