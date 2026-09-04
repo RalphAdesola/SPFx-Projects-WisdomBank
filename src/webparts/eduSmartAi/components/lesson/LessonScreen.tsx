@@ -28,6 +28,16 @@ function formatDate(value?: string): string {
   return new Date(value).toLocaleDateString();
 }
 
+function isVideoMaterial(material?: ICourse): boolean {
+  if (!material) {
+    return false;
+  }
+
+  const materialType = material.materialType?.trim().toLowerCase() || '';
+  const fileName = material.fileName?.trim().toLowerCase() || '';
+  return materialType.includes('video') || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(fileName);
+}
+
 const LessonScreen: React.FC<ILessonScreenProps> = ({
   theme,
   sp,
@@ -65,8 +75,10 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
     : undefined;
   const isCompleted = (progressState?.progressPercent || 0) >= 100;
   const completionUnlocked = hasCompletedCourse || isCompleted;
-  const previewUrl = material?.documentUrl
-    ? `${material.documentUrl}${material.documentUrl.indexOf('?') >= 0 ? '&' : '?'}web=1&action=embedview`
+  const videoMaterial = isVideoMaterial(material);
+  const mediaUrl = material?.documentUrl || '';
+  const previewUrl = !videoMaterial && mediaUrl
+    ? `${mediaUrl}${mediaUrl.indexOf('?') >= 0 ? '&' : '?'}web=1&action=embedview`
     : '';
   const estimatedReadingMinutes = Math.max(Number(material?.estimatedMinutes || material?.estimatedHours * 60 || 8) || 8, 8);
 
@@ -186,7 +198,7 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
 
   return (
     <div className={`${styles.lesson} ${theme === 'dark' ? styles.lessonDark : styles.lessonLight}`}>
-      <PageHeader title="Learning Material Details" subtitle="Review the assigned document and prepare for the assessment." theme={theme} />
+      <PageHeader title="Learning Material Details" subtitle={videoMaterial ? 'Watch the assigned video and prepare for the assessment.' : 'Review the assigned document and prepare for the assessment.'} theme={theme} />
       <div className={styles.contentGrid}>
         <section className={styles.mainColumn}>
           <div className={styles.breadcrumb}>Learning Materials &gt; {material.subject}</div>
@@ -195,7 +207,7 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
             {material.isRequired ? <span className={styles.badge}>Required</span> : null}
           </div>
           <div className={styles.lessonMeta}>
-            Estimated reading time: {material.estimatedMinutes || 0} min | Document type: {material.materialType || 'Document'} | Updated: {formatDate(material.modifiedDate)}
+            Estimated duration: {material.estimatedMinutes || 0} min | Material type: {material.materialType || 'Document'} | Updated: {formatDate(material.modifiedDate)}
           </div>
           <article className={styles.body}>
             <p>{material.description || 'No description has been added for this learning material.'}</p>
@@ -210,13 +222,13 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
           </article>
           <div className={styles.actionRow}>
             <PrimaryButton
-              text="View document"
-              aria-label={`View ${material.title}`}
+              text={videoMaterial ? 'Open video' : 'View document'}
+              aria-label={`${videoMaterial ? 'Open video' : 'View'} ${material.title}`}
               onClick={() => {
                 markStarted(currentUser.displayName || 'Learner', material.title, Number(material.id)).catch(() => undefined);
-                window.open(previewUrl, '_blank', 'noopener,noreferrer');
+                window.open(videoMaterial ? mediaUrl : previewUrl, '_blank', 'noopener,noreferrer');
               }}
-              disabled={!previewUrl}
+              disabled={!(videoMaterial ? mediaUrl : previewUrl)}
             />
             <PrimaryButton
               text="AI Assistant"
@@ -257,8 +269,16 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
         </section>
         <aside className={styles.sidePanel}>
           <div className={styles.videoCard}>
-            <div className={styles.videoLabel}>Document preview</div>
-            {previewUrl ? (
+            <div className={styles.videoLabel}>{videoMaterial ? 'Video player' : 'Document preview'}</div>
+            {videoMaterial && mediaUrl ? (
+              <video
+                className={styles.videoPlayer}
+                src={mediaUrl}
+                controls
+                preload="metadata"
+                aria-label={`${material.title} video`}
+              />
+            ) : previewUrl ? (
               <iframe
                 className={styles.documentFrame}
                 src={previewUrl}
@@ -293,7 +313,7 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
           <div className={styles.assistantModal} role="dialog" aria-modal="true" aria-label="AI Assistant options" onClick={(event) => event.stopPropagation()}>
             <div className={styles.modalHeader}>
               <div>
-                <h3>WisdomBankAI at your service, based on this course, how may I help you?</h3>
+                <h3>Employee Learning AI at your service, based on this course, how may I help you?</h3>
               </div>
               <IconButton
                 iconProps={{ iconName: 'Cancel' }}
@@ -346,9 +366,17 @@ const LessonScreen: React.FC<ILessonScreenProps> = ({
                 {summaryError ? <div className={styles.summaryNote}>{summaryError}</div> : null}
               </div>
               <div className={styles.summaryPreview}>
-                <div className={styles.videoLabel}>Document preview</div>
-                {previewUrl ? (
-                  <iframe
+                <div className={styles.videoLabel}>{videoMaterial ? 'Video player' : 'Document preview'}</div>
+                {videoMaterial && mediaUrl ? (
+                 <video
+                   className={styles.summaryVideoPlayer}
+                   src={mediaUrl}
+                   controls
+                   preload="metadata"
+                   aria-label={`${material.title} video`}
+                 />
+                ) : previewUrl ? (
+                 <iframe
                     className={styles.summaryFrame}
                     src={previewUrl}
                     title={`${material.title} summary preview`}

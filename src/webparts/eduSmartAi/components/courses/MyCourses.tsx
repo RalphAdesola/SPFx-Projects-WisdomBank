@@ -86,9 +86,9 @@ const MyCourses: React.FC<IMyCoursesProps> = ({
       <div className={styles.topBar}>
         <div>
           <div className={styles.brandHeader}>
-            <div className={styles.brandLogo}>WB</div>
+            <div className={styles.brandLogo}>EL</div>
             <div>
-              <div className={styles.brandTitle}>WisdomBank</div>
+              <div className={styles.brandTitle}>Employee Learning Hub</div>
               <div className={styles.brandSubtitle}>Personalized Learning Assistant</div>
             </div>
           </div>

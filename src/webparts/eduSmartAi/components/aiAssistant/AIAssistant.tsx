@@ -78,7 +78,7 @@ const AIAssistant: React.FC<IAIAssistantProps> = ({
       <div className={styles.chatPanel}>
         <div className={styles.headerBar}>
           <div>
-            <h2>WisdomAI</h2>
+            <h2>Employee Learning AI</h2>
             <div className={styles.headerSubtext}>{course?.title || currentSubject}</div>
           </div>
           <IconButton

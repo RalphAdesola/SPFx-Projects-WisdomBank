@@ -20,13 +20,13 @@ const LandingPage: React.FC<ILandingPageProps> = ({ onGetStarted, theme }) => {
       <div className={styles.heroContent}>
         <div className={styles.topRow}>
           <div className={styles.brandGroup}>
-            <span className={styles.brandTag}>WisdomBank</span>
+            <span className={styles.brandTag}>Employee Learning Hub</span>
             <span className={styles.brandLabel}>Enterprise knowledge & learning platform</span>
           </div>
         </div>
 
         <div className={styles.heroHeader}>
-          <h1>Welcome to WisdomBank</h1>
+          <h1>Welcome to Employee Learning</h1>
           <p>
             Your Efficient and Reliable Knowledge Hub.
           </p>

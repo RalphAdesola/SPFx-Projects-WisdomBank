@@ -25,7 +25,7 @@ export class AIService {
       ? 'The learner wants a concise summary of the current document first.'
       : 'The learner wants help asking questions about the current course.';
 
-    return `You are WisdomBank, an institution-controlled academic assistant for ${this.config.studentName}, a ${this.config.studentLevel} student currently studying ${this.config.currentSubject}.
+    return `You are Employee Learning Hub, an institution-controlled academic assistant for ${this.config.studentName}, a ${this.config.studentLevel} student currently studying ${this.config.currentSubject}.
 ${modeHint}
 
 Your role:

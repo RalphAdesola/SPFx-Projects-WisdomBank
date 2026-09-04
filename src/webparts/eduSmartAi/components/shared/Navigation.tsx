@@ -34,9 +34,9 @@ const Navigation: React.FC<INavigationProps> = ({
   return (
     <aside className={`${styles.sidebar} ${isDarkTheme ? styles.sidebarDark : styles.sidebarLight}`} aria-label="Application navigation">
       <div className={styles.brand}>
-        <img className={styles.logo} src={botImage} alt="WisdomBank logo" />
+        <img className={styles.logo} src={botImage} alt="Employee Learning logo" />
         <div>
-          <div className={styles.title}>WisdomBank</div>
+          <div className={styles.title}>Employee Learning</div>
           <div className={styles.subtitle}>{institutionName}</div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 # edu-smart-ai
-/*Rafa - use npx gulp serve for dis wan and npm v18 also, check your README.md to know the build its using*/
+/*Rafael - use npx gulp serve for dis wan and nvm use 18.20.8 also, check your README.md to know the build its using*/
 ## Summary
 
 Short summary on functionality and used technologies.

@@ -57,7 +57,7 @@ function downloadCertificate(certificate: IAssessmentCertificate): void {
   context.textAlign = 'center';
   context.fillStyle = '#0f766e';
   context.font = '700 34px Arial';
-  drawCenteredText(context, 'WISDOMBANK', 160, 1200);
+  drawCenteredText(context, 'LBAN Employee', 160, 1200);
   context.fillStyle = '#6b7280';
   context.font = '500 24px Arial';
   drawCenteredText(context, 'ENTERPRISE KNOWLEDGE & LEARNING PLATFORM', 205, 1200);
@@ -94,11 +94,11 @@ function downloadCertificate(certificate: IAssessmentCertificate): void {
   context.textAlign = 'left';
   context.fillText(`Issued: ${formatDate(certificate.submittedDate)}`, 170, 930);
   context.textAlign = 'right';
-  context.fillText(`Certificate ID: WB-${certificate.id}`, 1430, 930);
+  context.fillText(`Certificate ID: EL-${certificate.id}`, 1430, 930);
   context.textAlign = 'center';
   context.fillStyle = '#ffffff';
   context.font = '600 20px Arial';
-  drawCenteredText(context, 'WisdomBank Learning & Development', 1072, 1200);
+  drawCenteredText(context, 'Employee Learning & Development', 1072, 1200);
 
   const link = document.createElement('a');
   link.download = `${safeFileName(certificate.courseTitle)}-certificate.png`;
@@ -141,7 +141,7 @@ const CertificateScreen: React.FC<ICertificateScreenProps> = ({
                   <div className={styles.certificateBrand}>
                     <img src={botImage} alt="" />
                     <div>
-                      <strong>WisdomBank</strong>
+                      <strong>LBAN Employee</strong>
                       <span>Enterprise knowledge & learning platform</span>
                     </div>
                   </div>
@@ -156,8 +156,8 @@ const CertificateScreen: React.FC<ICertificateScreenProps> = ({
                     <div><span>Issued</span><strong>{formatDate(certificate.submittedDate)}</strong></div>
                   </div>
                   <div className={styles.certificateFooter}>
-                    <span>WisdomBank Learning & Development</span>
-                    <span>Certificate ID: WB-{certificate.id}</span>
+                    <span>Employee Learning & Development</span>
+                    <span>Certificate ID: EL-{certificate.id}</span>
                   </div>
                 </div>
               </div>
